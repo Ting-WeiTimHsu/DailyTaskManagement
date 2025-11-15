@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { format, parseISO, isBefore, startOfDay } from "date-fns";
 import { Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface Task {
   id: string;
@@ -10,19 +13,73 @@ interface Task {
 
 const PastTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
+  // Check auth
   useEffect(() => {
-    const stored = localStorage.getItem("tasks");
-    if (stored) {
-      setTasks(JSON.parse(stored));
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        navigate("/");
+      } else {
+        setUser(session.user);
+      }
+      setLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        navigate("/");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  // Load past tasks
+  useEffect(() => {
+    if (user) {
+      loadPastTasks();
     }
-  }, []);
+  }, [user]);
+
+  const loadPastTasks = async () => {
+    const today = format(startOfDay(new Date()), "yyyy-MM-dd");
+    
+    const { data, error } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("user_id", user.id)
+      .lt("date", today)
+      .order("date", { ascending: false });
+
+    if (error) {
+      toast({
+        title: "Error loading past tasks",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      setTasks(data || []);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-12">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   const today = startOfDay(new Date());
-  const pastTasks = tasks.filter((task) => {
-    const taskDate = parseISO(task.date);
-    return isBefore(taskDate, today);
-  });
+  const pastTasks = tasks;
 
   // Group tasks by date
   const groupedTasks = pastTasks.reduce((acc, task) => {

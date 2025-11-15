@@ -34,12 +34,12 @@ const Layout = ({ children }: LayoutProps) => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     toast({ title: "Logged out successfully" });
-    navigate("/auth");
+    navigate("/");
     setOpen(false);
   };
 
   const menuItems = [
-    { title: "Home", icon: Home, path: "/" },
+    { title: "Home", icon: Home, path: "/app" },
     { title: "Past Tasks", icon: Calendar, path: "/past-tasks" },
   ];
 
