@@ -88,9 +88,9 @@ const InteractiveDuck = () => {
     };
   });
 
-  // Calculate duck movement toward mouse
-  const duckFollowX = duckPosition.x + (mousePosition.x - duckPosition.x) * 0.05;
-  const duckFollowY = (duckPosition.y - window.scrollY) + ((mousePosition.y - window.scrollY) - (duckPosition.y - window.scrollY)) * 0.05;
+  // Calculate duck movement toward mouse (increased sensitivity from 0.05 to 0.15)
+  const duckFollowX = duckPosition.x + (mousePosition.x - duckPosition.x) * 0.15;
+  const duckFollowY = (duckPosition.y - window.scrollY) + ((mousePosition.y - window.scrollY) - (duckPosition.y - window.scrollY)) * 0.15;
 
   return (
     <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
@@ -126,7 +126,7 @@ const InteractiveDuck = () => {
 
         <div
           ref={duckRef}
-          className="relative cursor-pointer hover:scale-105 transition-all duration-300 ease-out"
+          className="relative cursor-pointer hover:scale-105 transition-all duration-150 ease-out"
           style={{ 
             width: "200px", 
             height: "200px",
