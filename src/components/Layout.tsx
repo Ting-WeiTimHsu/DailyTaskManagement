@@ -18,9 +18,9 @@ const Layout = ({ children }: LayoutProps) => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-        <div className="container flex h-16 items-center px-4">
+    <div className="min-h-screen bg-background gradient-animated">
+      <header className="sticky top-0 z-50 w-full">
+        <div className="mx-auto w-[80%] flex h-16 items-center px-4 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 border rounded-2xl mt-4 shadow-lg">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="mr-2">
@@ -45,8 +45,8 @@ const Layout = ({ children }: LayoutProps) => {
               </nav>
             </SheetContent>
           </Sheet>
-          <h1 className="text-xl font-semibold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            Daily Tasks
+          <h1 className="text-xl font-semibold text-foreground">
+            Daily tasks tracks
           </h1>
         </div>
       </header>
