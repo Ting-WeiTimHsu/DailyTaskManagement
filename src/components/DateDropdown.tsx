@@ -42,22 +42,24 @@ const DateDropdown = ({ value, onChange }: DateDropdownProps) => {
   };
 
   return (
-    <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-full max-w-xs bg-card border-border hover:bg-task-hover transition-colors shadow-md">
-        <Calendar className="mr-2 h-4 w-4 text-foreground" />
-        <SelectValue placeholder="Select a date" />
-      </SelectTrigger>
-      <SelectContent className="bg-popover">
-        {dates.map((date) => {
-          const dateStr = format(date, "yyyy-MM-dd");
-          return (
-            <SelectItem key={dateStr} value={dateStr} className="cursor-pointer">
-              {formatDateDisplay(date)}
-            </SelectItem>
-          );
-        })}
-      </SelectContent>
-    </Select>
+    <div className="bg-card rounded-xl p-4 border shadow-xl">
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="w-full max-w-xs bg-card border-border hover:bg-task-hover transition-colors shadow-xl">
+          <Calendar className="mr-2 h-4 w-4 text-foreground" />
+          <SelectValue placeholder="Select a date" />
+        </SelectTrigger>
+        <SelectContent className="bg-popover">
+          {dates.map((date) => {
+            const dateStr = format(date, "yyyy-MM-dd");
+            return (
+              <SelectItem key={dateStr} value={dateStr} className="cursor-pointer">
+                {formatDateDisplay(date)}
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
+    </div>
   );
 };
 
