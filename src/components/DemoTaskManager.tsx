@@ -168,11 +168,6 @@ const DemoTaskManager = () => {
           )}
         </div>
       </div>
-
-      <div className="text-center py-4 text-sm text-muted-foreground">
-        <p>💡 This is a demo version using local storage</p>
-        <p>Sign up to sync across devices and access more features!</p>
-      </div>
     </div>
   );
 };
