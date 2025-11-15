@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import duckImage from "@/assets/duck.webp";
+import duckImage from "@/assets/duck.png";
 import { removeBackground, loadImage } from "@/utils/backgroundRemoval";
 
 const InteractiveDuck = () => {
