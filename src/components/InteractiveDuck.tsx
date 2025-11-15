@@ -1,22 +1,20 @@
 import { useEffect, useRef, useState } from "react";
+import duckImage from "@/assets/duck.webp";
 
 const InteractiveDuck = () => {
   const duckRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [duckRotation, setDuckRotation] = useState(0);
+  const [duckPosition, setDuckPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+      
       if (duckRef.current) {
         const duckRect = duckRef.current.getBoundingClientRect();
         const duckCenterX = duckRect.left + duckRect.width / 2;
         const duckCenterY = duckRect.top + duckRect.height / 2;
-        
-        const angle = Math.atan2(e.clientY - duckCenterY, e.clientX - duckCenterX);
-        const rotation = (angle * 180) / Math.PI;
-        
-        setMousePosition({ x: e.clientX, y: e.clientY });
-        setDuckRotation(rotation);
+        setDuckPosition({ x: duckCenterX, y: duckCenterY });
       }
     };
 
@@ -24,39 +22,82 @@ const InteractiveDuck = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  // Create vectors pointing from duck to mouse
+  const numVectors = 8;
+  const vectors = Array.from({ length: numVectors }, (_, i) => {
+    const angle = (i / numVectors) * Math.PI * 2;
+    const baseLength = 60;
+    
+    // Calculate direction towards mouse
+    const dx = mousePosition.x - duckPosition.x;
+    const dy = mousePosition.y - duckPosition.y - window.scrollY;
+    const distanceToMouse = Math.sqrt(dx * dx + dy * dy);
+    const influence = Math.max(0, Math.min(1, 300 / Math.max(distanceToMouse, 1)));
+    
+    // Vector direction
+    const vectorDx = Math.cos(angle);
+    const vectorDy = Math.sin(angle);
+    
+    // Angle to mouse from this vector
+    const angleToMouse = Math.atan2(dy, dx);
+    const vectorAngle = Math.atan2(vectorDy, vectorDx);
+    const angleDiff = Math.abs(((angleToMouse - vectorAngle + Math.PI) % (Math.PI * 2)) - Math.PI);
+    
+    // Extend vectors that point toward mouse
+    const extension = influence * (1 - angleDiff / Math.PI) * 40;
+    const length = baseLength + extension;
+    
+    return {
+      x1: Math.cos(angle) * 40,
+      y1: Math.sin(angle) * 40,
+      x2: Math.cos(angle) * length,
+      y2: Math.sin(angle) * length,
+      opacity: 0.4 + influence * 0.4,
+    };
+  });
+
   return (
     <div className="relative w-full h-48 flex items-center justify-center overflow-hidden">
-      {/* Gradient vectors that follow the mouse */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ filter: "blur(40px)" }}
-      >
-        <defs>
-          <radialGradient id="gradientGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="hsl(280 85% 65%)" stopOpacity="0.6" />
-            <stop offset="50%" stopColor="hsl(195 95% 65%)" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="hsl(50 95% 65%)" stopOpacity="0.2" />
-          </radialGradient>
-        </defs>
-        <circle
-          cx={mousePosition.x}
-          cy={mousePosition.y - window.scrollY}
-          r="150"
-          fill="url(#gradientGlow)"
-          className="transition-all duration-300"
-        />
-      </svg>
+      {/* Interactive duck with vectors */}
+      <div className="relative z-10 flex items-center justify-center">
+        <svg
+          className="absolute inset-0 pointer-events-none"
+          style={{ width: "200px", height: "200px", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
+        >
+          <defs>
+            <linearGradient id="vectorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="hsl(280 85% 65%)" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="hsl(195 95% 65%)" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="hsl(50 95% 65%)" stopOpacity="0.4" />
+            </linearGradient>
+          </defs>
+          <g transform="translate(100, 100)">
+            {vectors.map((vector, i) => (
+              <line
+                key={i}
+                x1={vector.x1}
+                y1={vector.y1}
+                x2={vector.x2}
+                y2={vector.y2}
+                stroke="url(#vectorGradient)"
+                strokeWidth="3"
+                strokeOpacity={vector.opacity}
+                className="transition-all duration-200"
+              />
+            ))}
+          </g>
+        </svg>
 
-      {/* Interactive duck */}
-      <div
-        ref={duckRef}
-        className="relative z-10 transition-transform duration-200"
-        style={{
-          transform: `rotate(${duckRotation}deg)`,
-        }}
-      >
-        <div className="text-8xl cursor-pointer hover:scale-110 transition-transform duration-300 drop-shadow-2xl">
-          🦆
+        <div
+          ref={duckRef}
+          className="relative cursor-pointer hover:scale-110 transition-transform duration-300"
+          style={{ width: "120px", height: "120px" }}
+        >
+          <img 
+            src={duckImage} 
+            alt="Interactive Duck" 
+            className="w-full h-full object-contain drop-shadow-2xl"
+          />
         </div>
       </div>
 
