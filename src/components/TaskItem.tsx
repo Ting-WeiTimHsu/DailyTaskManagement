@@ -16,20 +16,30 @@ interface TaskItemProps {
   id: string;
   text: string;
   date: string;
+  completed: boolean;
   onUpdate: (id: string, text: string) => void;
   onDelete: (id: string) => void;
   onMove: (id: string, newDate: string) => void;
+  onToggleComplete: (id: string) => void;
   isDragging?: boolean;
+  onDragStart?: (e: React.DragEvent, id: string) => void;
+  onDragOver?: (e: React.DragEvent) => void;
+  onDrop?: (e: React.DragEvent, targetId: string) => void;
 }
 
 const TaskItem = ({
   id,
   text,
   date,
+  completed,
   onUpdate,
   onDelete,
   onMove,
+  onToggleComplete,
   isDragging = false,
+  onDragStart,
+  onDragOver,
+  onDrop,
 }: TaskItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(text);
@@ -75,10 +85,13 @@ const TaskItem = ({
 
   return (
     <div
-      className={`group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all shadow-md hover:shadow-lg hover:bg-task-hover ${
+      className={`group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all shadow-xl hover:shadow-2xl hover:bg-task-hover ${
         isDragging ? "opacity-50 scale-95" : "opacity-100 scale-100"
-      }`}
+      } ${completed ? "opacity-60" : ""}`}
       draggable
+      onDragStart={(e) => onDragStart?.(e, id)}
+      onDragOver={onDragOver}
+      onDrop={(e) => onDrop?.(e, id)}
     >
       <div className="flex-1 min-w-0">
         {isEditing ? (
@@ -93,7 +106,9 @@ const TaskItem = ({
           />
         ) : (
           <p
-            className="text-foreground text-base cursor-text"
+            className={`text-foreground text-base cursor-text ${
+              completed ? "line-through" : ""
+            }`}
             onClick={() => setIsEditing(true)}
           >
             {text}
@@ -112,6 +127,13 @@ const TaskItem = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48 bg-popover">
+          <DropdownMenuItem
+            onClick={() => onToggleComplete(id)}
+            className="cursor-pointer text-foreground hover:bg-task-hover"
+          >
+            <span className="mr-2">{completed ? "☑" : "☐"}</span>
+            {completed ? "Mark Incomplete" : "Mark Complete"}
+          </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="cursor-pointer text-foreground">
               <MoveRight className="mr-2 h-4 w-4 text-foreground" />
