@@ -93,6 +93,10 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   .gradient-animated {
     background: linear-gradient(
       135deg,

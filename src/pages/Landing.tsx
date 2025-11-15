@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import InteractiveDuck from "@/components/InteractiveDuck";
 import DemoTaskManager from "@/components/DemoTaskManager";
@@ -8,6 +9,12 @@ import DemoTaskManager from "@/components/DemoTaskManager";
 const Landing = () => {
   const navigate = useNavigate();
   const [showDemo, setShowDemo] = useState(false);
+  const { scrollY } = useScroll();
+  
+  // Parallax effects
+  const heroY = useTransform(scrollY, [0, 500], [0, 150]);
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const duckY = useTransform(scrollY, [0, 500], [0, -100]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -30,94 +37,169 @@ const Landing = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-end pb-20 px-4 pt-24">
-        <InteractiveDuck />
+      <section className="relative min-h-screen flex flex-col items-center justify-end pb-20 px-4 pt-24 overflow-hidden">
+        <motion.div style={{ y: duckY }} className="w-full">
+          <InteractiveDuck />
+        </motion.div>
         
-        <div className="max-w-4xl mx-auto text-center space-y-8 mt-12">
+        <motion.div 
+          style={{ y: heroY, opacity: heroOpacity }}
+          className="max-w-4xl mx-auto text-center space-y-8 mt-12"
+        >
           <div className="space-y-4">
-            <h1 className="text-6xl md:text-7xl font-bold text-foreground leading-tight">
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-6xl md:text-7xl font-bold text-foreground leading-tight"
+            >
               Type
-            </h1>
-            <h1 className="text-6xl md:text-7xl font-bold text-foreground leading-tight">
+            </motion.h1>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="text-6xl md:text-7xl font-bold text-foreground leading-tight"
+            >
               Click
-            </h1>
-            <h1 className="text-6xl md:text-7xl font-bold text-foreground leading-tight">
+            </motion.h1>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="text-6xl md:text-7xl font-bold text-foreground leading-tight"
+            >
               Manage
-            </h1>
+            </motion.h1>
           </div>
           
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Organize your daily tasks with ease. Simple, beautiful, and effective.
-          </p>
-          
-          <Button
-            size="lg"
-            onClick={() => {
-              const demoSection = document.getElementById('demo-section');
-              demoSection?.scrollIntoView({ behavior: 'smooth' });
-              setTimeout(() => setShowDemo(true), 500);
-            }}
-            className="text-lg px-8 py-6 rounded-full"
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="text-xl text-muted-foreground max-w-2xl mx-auto"
           >
-            Try It Free
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </div>
+            Organize your daily tasks with ease. Simple, beautiful, and effective.
+          </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.0 }}
+          >
+            <Button
+              size="lg"
+              onClick={() => {
+                const demoSection = document.getElementById('demo-section');
+                demoSection?.scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => setShowDemo(true), 500);
+              }}
+              className="text-lg px-8 py-6 rounded-full"
+            >
+              Try It Free
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Demo Section */}
-      <section 
+      <motion.section 
         id="demo-section" 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.8 }}
         className="min-h-screen flex items-center justify-center px-4 py-20"
       >
         <div className="max-w-4xl mx-auto w-full">
-          <div className="text-center mb-12">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Try It Out
             </h2>
             <p className="text-xl text-muted-foreground">
               No sign-up required. Start managing your tasks right now.
             </p>
-          </div>
+          </motion.div>
           
-          {showDemo && <DemoTaskManager />}
+          {showDemo && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <DemoTaskManager />
+            </motion.div>
+          )}
         </div>
-      </section>
+      </motion.section>
 
       {/* CTA Section */}
-      <section className="min-h-screen flex items-center justify-center px-4 py-20 bg-gradient-to-b from-background to-accent/5">
+      <motion.section 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.8 }}
+        className="min-h-screen flex items-center justify-center px-4 py-20 bg-gradient-to-b from-background to-accent/5"
+      >
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-5xl font-bold text-foreground mb-6"
+          >
             Ready for More?
-          </h2>
+          </motion.h2>
           
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="p-6 rounded-xl border bg-card space-y-3">
-              <CheckCircle2 className="h-12 w-12 text-primary mx-auto" />
-              <h3 className="text-xl font-semibold">Cloud Sync</h3>
-              <p className="text-muted-foreground">
-                Access your tasks from any device, anywhere
-              </p>
-            </div>
-            
-            <div className="p-6 rounded-xl border bg-card space-y-3">
-              <CheckCircle2 className="h-12 w-12 text-primary mx-auto" />
-              <h3 className="text-xl font-semibold">Task History</h3>
-              <p className="text-muted-foreground">
-                View and manage all your past tasks
-              </p>
-            </div>
-            
-            <div className="p-6 rounded-xl border bg-card space-y-3">
-              <CheckCircle2 className="h-12 w-12 text-primary mx-auto" />
-              <h3 className="text-xl font-semibold">Drag & Drop</h3>
-              <p className="text-muted-foreground">
-                Easily reorder tasks with intuitive controls
-              </p>
-            </div>
+            {[
+              {
+                icon: CheckCircle2,
+                title: "Cloud Sync",
+                description: "Access your tasks from any device, anywhere"
+              },
+              {
+                icon: CheckCircle2,
+                title: "Task History",
+                description: "View and manage all your past tasks"
+              },
+              {
+                icon: CheckCircle2,
+                title: "Drag & Drop",
+                description: "Easily reorder tasks with intuitive controls"
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="p-6 rounded-xl border bg-card space-y-3"
+              >
+                <feature.icon className="h-12 w-12 text-primary mx-auto" />
+                <h3 className="text-xl font-semibold">{feature.title}</h3>
+                <p className="text-muted-foreground">{feature.description}</p>
+              </motion.div>
+            ))}
           </div>
           
-          <div className="space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="space-y-4"
+          >
             <Button
               size="lg"
               onClick={() => navigate('/auth')}
@@ -136,9 +218,9 @@ const Landing = () => {
                 Log in
               </button>
             </p>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 };
