@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, Cloud, History, GripVertical, Zap, Shield, Smartphone } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import InteractiveDuck from "@/components/InteractiveDuck";
@@ -40,7 +40,7 @@ const Landing = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-end pb-20 px-4 pt-24 overflow-hidden">
+      <section className="relative min-h-[80vh] flex flex-col items-center justify-end pb-16 px-4 pt-24 overflow-hidden">
         <motion.div style={{ y: duckY }} className="w-full">
           <InteractiveDuck />
         </motion.div>
@@ -113,7 +113,7 @@ const Landing = () => {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.8 }}
-        className="min-h-screen flex items-center justify-center px-4 py-20"
+        className="min-h-[90vh] flex items-center justify-center px-4 py-16"
       >
         <div className="max-w-4xl mx-auto w-full">
           <motion.div 
@@ -143,13 +143,99 @@ const Landing = () => {
         </div>
       </motion.section>
 
+      {/* Features Section */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.8 }}
+        className="py-20 px-4"
+      >
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Everything You Need
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Powerful features to keep you organized and productive
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Cloud,
+                title: "Cloud Sync",
+                description: "Your tasks sync automatically across all your devices in real-time"
+              },
+              {
+                icon: History,
+                title: "Task History",
+                description: "Access and review all your completed tasks anytime you need"
+              },
+              {
+                icon: GripVertical,
+                title: "Drag & Drop",
+                description: "Intuitive drag and drop interface makes organizing tasks effortless"
+              },
+              {
+                icon: Zap,
+                title: "Lightning Fast",
+                description: "Optimized for speed with instant loading and smooth animations"
+              },
+              {
+                icon: Shield,
+                title: "Secure & Private",
+                description: "Your data is encrypted and stored securely in the cloud"
+              },
+              {
+                icon: Smartphone,
+                title: "Mobile Friendly",
+                description: "Works perfectly on any device, from phone to desktop"
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="group relative p-8 rounded-2xl border bg-card hover:shadow-2xl transition-all duration-300"
+              >
+                <motion.div
+                  whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                  className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6"
+                >
+                  <feature.icon className="h-8 w-8 text-primary" />
+                </motion.div>
+                <h3 className="text-2xl font-semibold text-foreground mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
       {/* CTA Section */}
       <motion.section 
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.8 }}
-        className="min-h-screen flex items-center justify-center px-4 py-20 bg-gradient-to-b from-background to-accent/5"
+        className="min-h-[60vh] flex items-center justify-center px-4 py-16 bg-gradient-to-b from-background to-accent/5"
       >
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <motion.h2 
