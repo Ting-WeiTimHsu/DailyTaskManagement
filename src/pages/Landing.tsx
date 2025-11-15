@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import InteractiveDuck from "@/components/InteractiveDuck";
 import DemoTaskManager from "@/components/DemoTaskManager";
+import BackgroundParticles from "@/components/BackgroundParticles";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -17,7 +18,9 @@ const Landing = () => {
   const duckY = useTransform(scrollY, [0, 500], [0, -100]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <BackgroundParticles />
+      
       {/* Navbar */}
       <header className="fixed top-0 z-50 w-full pt-4">
         <div className="mx-auto w-[80%]">
@@ -158,40 +161,6 @@ const Landing = () => {
           >
             Ready for More?
           </motion.h2>
-          
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {[
-              {
-                icon: CheckCircle2,
-                title: "Cloud Sync",
-                description: "Access your tasks from any device, anywhere"
-              },
-              {
-                icon: CheckCircle2,
-                title: "Task History",
-                description: "View and manage all your past tasks"
-              },
-              {
-                icon: CheckCircle2,
-                title: "Drag & Drop",
-                description: "Easily reorder tasks with intuitive controls"
-              }
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="p-6 rounded-xl border bg-card space-y-3"
-              >
-                <feature.icon className="h-12 w-12 text-primary mx-auto" />
-                <h3 className="text-xl font-semibold">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
           
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
