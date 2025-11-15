@@ -42,7 +42,8 @@ const DateDropdown = ({ value, onChange }: DateDropdownProps) => {
   };
 
   return (
-    <div className="bg-card rounded-xl p-4 border shadow-xl">
+    <div className="bg-card rounded-xl p-4 border shadow-xl space-y-2">
+      <label className="text-sm font-medium text-muted-foreground">Dates</label>
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="w-full max-w-xs bg-card border-border hover:bg-task-hover transition-colors shadow-xl">
           <Calendar className="mr-2 h-4 w-4 text-foreground" />

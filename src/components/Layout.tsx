@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Menu, Home, Calendar, LogIn, LogOut } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -46,16 +46,25 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-background gradient-animated">
       <header className="sticky top-0 z-50 w-full pt-4">
-        <div className="mx-auto w-[80%] flex h-16 items-center px-4 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 border rounded-2xl shadow-lg">
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="mr-2">
+        <div className="mx-auto w-[80%] relative">
+          <div className="flex flex-col bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 border rounded-full shadow-lg overflow-hidden transition-all duration-300">
+            <div className="flex h-16 items-center px-4">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="mr-2"
+                onClick={() => setOpen(!open)}
+              >
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-64 bg-card">
-              <nav className="flex flex-col gap-4 mt-8">
+              <h1 className="text-xl font-semibold text-foreground">
+                Daily Tasks Track
+              </h1>
+            </div>
+            
+            {open && (
+              <nav className="flex flex-col gap-2 px-4 pb-4 animate-slide-in">
                 {menuItems.map((item) => (
                   <NavLink
                     key={item.path}
@@ -69,7 +78,7 @@ const Layout = ({ children }: LayoutProps) => {
                   </NavLink>
                 ))}
                 
-                <div className="mt-auto pt-4 border-t">
+                <div className="pt-2 border-t">
                   {user ? (
                     <Button
                       variant="ghost"
@@ -92,11 +101,8 @@ const Layout = ({ children }: LayoutProps) => {
                   )}
                 </div>
               </nav>
-            </SheetContent>
-          </Sheet>
-          <h1 className="text-xl font-semibold text-foreground">
-            Daily Tasks Track
-          </h1>
+            )}
+          </div>
         </div>
       </header>
       <main className="container py-6 px-4">{children}</main>

@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import DateDropdown from "@/components/DateDropdown";
 import TaskItem from "@/components/TaskItem";
+import InteractiveDuck from "@/components/InteractiveDuck";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -231,14 +232,12 @@ const Index = () => {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
-      <div className="space-y-2">
-        <h2 className="text-2xl font-bold text-foreground">Your Tasks</h2>
-        <p className="text-muted-foreground">Select a date and manage your daily tasks</p>
-      </div>
+      <InteractiveDuck />
 
       <DateDropdown value={selectedDate} onChange={setSelectedDate} />
 
       <div className="space-y-3 bg-card rounded-xl p-6 border shadow-xl">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Tasks Stack</h3>
         <div className="flex gap-2">
           <Input
             type="text"
