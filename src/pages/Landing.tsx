@@ -113,7 +113,7 @@ const Landing = () => {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.8 }}
-        className="min-h-[90vh] flex items-center justify-center px-4 py-16"
+        className="flex items-center justify-center px-4 py-12"
       >
         <div className="max-w-4xl mx-auto w-full">
           <motion.div 
@@ -149,7 +149,7 @@ const Landing = () => {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.8 }}
-        className="min-h-[60vh] flex items-center justify-center px-4 py-16 bg-gradient-to-b from-background to-accent/5"
+        className="flex items-center justify-center px-4 py-12 mt-8 bg-gradient-to-b from-background to-accent/5"
       >
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <motion.h2 
