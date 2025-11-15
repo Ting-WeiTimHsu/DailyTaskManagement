@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Menu, Home, Calendar, LogIn, LogOut } from "lucide-react";
+import { Menu, Home, Calendar, LogIn, LogOut, X } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
 
@@ -47,61 +47,65 @@ const Layout = ({ children }: LayoutProps) => {
     <div className="min-h-screen bg-background gradient-animated">
       <header className="sticky top-0 z-50 w-full pt-4">
         <div className="mx-auto w-[80%] relative">
-          <div className="flex flex-col bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 border rounded-full shadow-lg overflow-hidden transition-all duration-300">
-            <div className="flex h-16 items-center px-4">
+          <div className="bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 border rounded-full shadow-lg overflow-hidden transition-all duration-300">
+            <div className="flex h-16 items-center px-4 gap-4">
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="mr-2"
+                className="shrink-0"
                 onClick={() => setOpen(!open)}
               >
-                <Menu className="h-5 w-5" />
+                {open ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
                 <span className="sr-only">Toggle menu</span>
               </Button>
-              <h1 className="text-xl font-semibold text-foreground">
-                Daily Tasks Track
-              </h1>
-            </div>
-            
-            {open && (
-              <nav className="flex flex-col gap-2 px-4 pb-4 animate-slide-in">
-                {menuItems.map((item) => (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-foreground transition-colors hover:bg-task-hover"
-                    activeClassName="bg-secondary text-secondary-foreground font-medium"
-                    onClick={() => setOpen(false)}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.title}</span>
-                  </NavLink>
-                ))}
-                
-                <div className="pt-2 border-t">
+              
+              {open ? (
+                <nav className="flex items-center gap-2 flex-1 overflow-x-auto animate-slide-in">
+                  {menuItems.map((item) => (
+                    <NavLink
+                      key={item.path}
+                      to={item.path}
+                      className="flex items-center gap-2 rounded-full px-4 py-2 text-foreground transition-colors hover:bg-task-hover whitespace-nowrap shrink-0"
+                      activeClassName="bg-secondary text-secondary-foreground font-medium"
+                      onClick={() => setOpen(false)}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span className="text-sm">{item.title}</span>
+                    </NavLink>
+                  ))}
+                  
                   {user ? (
                     <Button
                       variant="ghost"
-                      className="w-full justify-start gap-3"
+                      size="sm"
+                      className="gap-2 rounded-full shrink-0"
                       onClick={handleLogout}
                     >
-                      <LogOut className="h-5 w-5" />
-                      <span>Logout</span>
+                      <LogOut className="h-4 w-4" />
+                      <span className="text-sm">Logout</span>
                     </Button>
                   ) : (
                     <NavLink
                       to="/auth"
-                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-foreground transition-colors hover:bg-task-hover"
+                      className="flex items-center gap-2 rounded-full px-4 py-2 text-foreground transition-colors hover:bg-task-hover whitespace-nowrap shrink-0"
                       activeClassName="bg-secondary text-secondary-foreground font-medium"
                       onClick={() => setOpen(false)}
                     >
-                      <LogIn className="h-5 w-5" />
-                      <span>Login</span>
+                      <LogIn className="h-4 w-4" />
+                      <span className="text-sm">Login</span>
                     </NavLink>
                   )}
-                </div>
-              </nav>
-            )}
+                </nav>
+              ) : (
+                <h1 className="text-xl font-semibold text-foreground">
+                  Daily Tasks Track
+                </h1>
+              )}
+            </div>
           </div>
         </div>
       </header>
