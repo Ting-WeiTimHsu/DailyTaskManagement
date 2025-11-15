@@ -1,10 +1,42 @@
 import { useEffect, useRef, useState } from "react";
 import duckImage from "@/assets/duck.webp";
+import { removeBackground, loadImage } from "@/utils/backgroundRemoval";
 
 const InteractiveDuck = () => {
   const duckRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [duckPosition, setDuckPosition] = useState({ x: 0, y: 0 });
+  const [processedDuckUrl, setProcessedDuckUrl] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(true);
+
+  // Process duck image to remove background
+  useEffect(() => {
+    const processDuckImage = async () => {
+      try {
+        setIsProcessing(true);
+        const response = await fetch(duckImage);
+        const blob = await response.blob();
+        const img = await loadImage(blob);
+        const processedBlob = await removeBackground(img);
+        const url = URL.createObjectURL(processedBlob);
+        setProcessedDuckUrl(url);
+        setIsProcessing(false);
+      } catch (error) {
+        console.error('Failed to process duck image:', error);
+        // Fallback to original image
+        setProcessedDuckUrl(duckImage);
+        setIsProcessing(false);
+      }
+    };
+
+    processDuckImage();
+
+    return () => {
+      if (processedDuckUrl) {
+        URL.revokeObjectURL(processedDuckUrl);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -56,13 +88,17 @@ const InteractiveDuck = () => {
     };
   });
 
+  // Calculate duck movement toward mouse
+  const duckFollowX = duckPosition.x + (mousePosition.x - duckPosition.x) * 0.05;
+  const duckFollowY = (duckPosition.y - window.scrollY) + ((mousePosition.y - window.scrollY) - (duckPosition.y - window.scrollY)) * 0.05;
+
   return (
-    <div className="relative w-full h-48 flex items-center justify-center overflow-hidden">
+    <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
       {/* Interactive duck with vectors */}
       <div className="relative z-10 flex items-center justify-center">
         <svg
           className="absolute inset-0 pointer-events-none"
-          style={{ width: "200px", height: "200px", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
+          style={{ width: "400px", height: "400px", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
         >
           <defs>
             <linearGradient id="vectorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -71,7 +107,7 @@ const InteractiveDuck = () => {
               <stop offset="100%" stopColor="hsl(50 95% 65%)" stopOpacity="0.4" />
             </linearGradient>
           </defs>
-          <g transform="translate(100, 100)">
+          <g transform="translate(200, 200)">
             {vectors.map((vector, i) => (
               <line
                 key={i}
@@ -90,21 +126,31 @@ const InteractiveDuck = () => {
 
         <div
           ref={duckRef}
-          className="relative cursor-pointer hover:scale-110 transition-transform duration-300"
-          style={{ width: "120px", height: "120px" }}
+          className="relative cursor-pointer hover:scale-105 transition-all duration-300 ease-out"
+          style={{ 
+            width: "200px", 
+            height: "200px",
+            transform: `translate(${duckFollowX - duckPosition.x}px, ${duckFollowY - (duckPosition.y - window.scrollY)}px)`
+          }}
         >
-          <img 
-            src={duckImage} 
-            alt="Interactive Duck" 
-            className="w-full h-full object-contain drop-shadow-2xl"
-          />
+          {isProcessing ? (
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-4xl animate-pulse">🦆</div>
+            </div>
+          ) : (
+            <img 
+              src={processedDuckUrl || duckImage} 
+              alt="Interactive Duck" 
+              className="w-full h-full object-contain drop-shadow-2xl"
+            />
+          )}
         </div>
       </div>
 
       {/* Animated gradient rings */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="absolute w-32 h-32 rounded-full border-4 border-accent/30 animate-ping" style={{ animationDuration: "3s" }} />
-        <div className="absolute w-48 h-48 rounded-full border-4 border-primary/20 animate-ping" style={{ animationDuration: "4s", animationDelay: "0.5s" }} />
+        <div className="absolute w-40 h-40 rounded-full border-4 border-accent/30 animate-ping" style={{ animationDuration: "3s" }} />
+        <div className="absolute w-64 h-64 rounded-full border-4 border-primary/20 animate-ping" style={{ animationDuration: "4s", animationDelay: "0.5s" }} />
       </div>
     </div>
   );

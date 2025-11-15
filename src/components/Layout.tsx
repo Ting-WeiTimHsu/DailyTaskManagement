@@ -52,7 +52,7 @@ const Layout = ({ children }: LayoutProps) => {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="shrink-0"
+                className="shrink-0 hover:bg-transparent focus:bg-transparent active:bg-transparent"
                 onClick={() => setOpen(!open)}
               >
                 {open ? (
