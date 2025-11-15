@@ -6,8 +6,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
-import { format, addDays } from "date-fns";
+import { format, addDays, startOfDay } from "date-fns";
 
 interface TaskItemProps {
   id: string;
@@ -55,15 +58,24 @@ const TaskItem = ({
     }
   };
 
-  const handleMoveToTomorrow = () => {
-    const currentDate = new Date(date);
-    const tomorrow = addDays(currentDate, 1);
-    onMove(id, format(tomorrow, "yyyy-MM-dd"));
+  const getNext7Days = () => {
+    const today = startOfDay(new Date());
+    return Array.from({ length: 7 }, (_, i) => {
+      const day = addDays(today, i);
+      return {
+        date: format(day, "yyyy-MM-dd"),
+        display: format(day, "MMM d, EEE"),
+      };
+    });
+  };
+
+  const handleMoveToDate = (newDate: string) => {
+    onMove(id, newDate);
   };
 
   return (
     <div
-      className={`group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all hover:shadow-md hover:bg-task-hover ${
+      className={`group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all shadow-md hover:shadow-lg hover:bg-task-hover ${
         isDragging ? "opacity-50 scale-95" : "opacity-100 scale-100"
       }`}
       draggable
@@ -100,13 +112,23 @@ const TaskItem = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48 bg-popover">
-          <DropdownMenuItem
-            onClick={handleMoveToTomorrow}
-            className="cursor-pointer text-foreground hover:bg-task-hover"
-          >
-            <MoveRight className="mr-2 h-4 w-4 text-primary" />
-            Move to later
-          </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className="cursor-pointer text-foreground">
+              <MoveRight className="mr-2 h-4 w-4 text-foreground" />
+              Move to
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className="bg-popover">
+              {getNext7Days().map((day) => (
+                <DropdownMenuItem
+                  key={day.date}
+                  onClick={() => handleMoveToDate(day.date)}
+                  className="cursor-pointer text-foreground hover:bg-task-hover"
+                >
+                  {day.display}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
           <DropdownMenuItem
             onClick={() => onDelete(id)}
             className="cursor-pointer text-destructive hover:bg-destructive/10"
