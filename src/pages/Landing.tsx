@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Twitter, Github, Mail } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import InteractiveDuck from "@/components/InteractiveDuck";
 import DemoTaskManager from "@/components/DemoTaskManager";
 import BackgroundParticles from "@/components/BackgroundParticles";
 
@@ -15,7 +14,6 @@ const Landing = () => {
   // Parallax effects
   const heroY = useTransform(scrollY, [0, 500], [0, 150]);
   const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const duckY = useTransform(scrollY, [0, 500], [0, -100]);
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -40,40 +38,28 @@ const Landing = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative min-h-[80vh] flex flex-col items-center justify-end pb-16 px-4 pt-24 overflow-hidden">
-        <motion.div style={{ y: duckY }} className="w-full">
-          <InteractiveDuck />
-        </motion.div>
-        
+      <section className="relative min-h-[80vh] flex flex-col items-center justify-center pb-16 px-4 pt-24 overflow-hidden">
         <motion.div 
           style={{ y: heroY, opacity: heroOpacity }}
-          className="max-w-4xl mx-auto text-center space-y-8 mt-12"
+          className="max-w-4xl mx-auto text-center space-y-8"
         >
-          <div className="space-y-4">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-6xl md:text-7xl font-bold text-foreground leading-tight"
+          <div className="space-y-2">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-flex flex-col gap-2"
             >
-              Type
-            </motion.h1>
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-6xl md:text-7xl font-bold text-foreground leading-tight"
-            >
-              Click
-            </motion.h1>
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="text-6xl md:text-7xl font-bold text-foreground leading-tight"
-            >
-              Manage
-            </motion.h1>
+              <h1 className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+                Type
+              </h1>
+              <h1 className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary/60 via-primary/80 to-primary bg-clip-text text-transparent leading-tight">
+                Click
+              </h1>
+              <h1 className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+                Manage
+              </h1>
+            </motion.div>
           </div>
           
           <motion.p 
@@ -190,6 +176,57 @@ const Landing = () => {
           </motion.div>
         </div>
       </motion.section>
+
+      {/* Footer */}
+      <footer className="border-t bg-card/50 backdrop-blur">
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-foreground">Daily Tasks Track</h3>
+              <p className="text-sm text-muted-foreground">
+                Simple and effective task management for your daily productivity.
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              <h4 className="text-sm font-semibold text-foreground">Product</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><button onClick={() => navigate('/auth')} className="hover:text-primary transition-colors">Features</button></li>
+                <li><button onClick={() => navigate('/auth')} className="hover:text-primary transition-colors">Pricing</button></li>
+                <li><button onClick={() => navigate('/auth')} className="hover:text-primary transition-colors">Try Demo</button></li>
+              </ul>
+            </div>
+            
+            <div className="space-y-4">
+              <h4 className="text-sm font-semibold text-foreground">Company</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-primary transition-colors">About</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            
+            <div className="space-y-4">
+              <h4 className="text-sm font-semibold text-foreground">Connect</h4>
+              <div className="flex gap-4">
+                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                  <Github className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                  <Mail className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} Daily Tasks Track. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
