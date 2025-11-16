@@ -5,26 +5,28 @@ const InteractiveDuck = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMouseInside, setIsMouseInside] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [containerCenter, setContainerCenter] = useState({ x: 0, y: 0 });
+  const [containerBounds, setContainerBounds] = useState({ left: 0, top: 0, width: 0, height: 0 });
 
   useEffect(() => {
-    const updateCenter = () => {
+    const updateBounds = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        setContainerCenter({
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
+        setContainerBounds({
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
         });
       }
     };
 
-    updateCenter();
-    window.addEventListener("resize", updateCenter);
-    window.addEventListener("scroll", updateCenter);
+    updateBounds();
+    window.addEventListener("resize", updateBounds);
+    window.addEventListener("scroll", updateBounds);
 
     return () => {
-      window.removeEventListener("resize", updateCenter);
-      window.removeEventListener("scroll", updateCenter);
+      window.removeEventListener("resize", updateBounds);
+      window.removeEventListener("scroll", updateBounds);
     };
   }, []);
 
@@ -49,42 +51,24 @@ const InteractiveDuck = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Calculate duck position (orbits around center based on mouse)
-  const duckPosition = (() => {
-    if (!isMouseInside) return { x: 0, y: 0 };
+  // Generate arrows/dots in a grid pattern across the entire container
+  const gridCols = 12;
+  const gridRows = 8;
+  const arrows = Array.from({ length: gridCols * gridRows }, (_, i) => {
+    const col = i % gridCols;
+    const row = Math.floor(i / gridCols);
     
-    const dx = mousePosition.x - containerCenter.x;
-    const dy = mousePosition.y - containerCenter.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    
-    if (distance < 1) return { x: 0, y: 0 };
-    
-    const angle = Math.atan2(dy, dx);
-    const orbitRadius = 60; // How far the duck orbits from center
-    
-    return {
-      x: Math.cos(angle) * orbitRadius,
-      y: Math.sin(angle) * orbitRadius,
-    };
-  })();
-
-  // Generate arrows/dots in a dense circle
-  const numArrows = 48; // More arrows for denser effect
-  const arrows = Array.from({ length: numArrows }, (_, i) => {
-    const baseAngle = (i / numArrows) * Math.PI * 2;
-    const baseRadius = 100; // Distance from container center to arrow start
-    
-    // Calculate arrow start position (around the center)
-    const startX = Math.cos(baseAngle) * baseRadius;
-    const startY = Math.sin(baseAngle) * baseRadius;
+    // Calculate grid position across the entire container
+    const startX = (col / (gridCols - 1)) * containerBounds.width;
+    const startY = (row / (gridRows - 1)) * containerBounds.height;
     
     if (!isMouseInside) {
       return { startX, startY, endX: startX, endY: startY, isDot: true };
     }
     
-    // Calculate direction from arrow start to mouse position
-    const mouseLocalX = mousePosition.x - containerCenter.x;
-    const mouseLocalY = mousePosition.y - containerCenter.y;
+    // Calculate direction from arrow start to mouse position (relative to container)
+    const mouseLocalX = mousePosition.x - containerBounds.left;
+    const mouseLocalY = mousePosition.y - containerBounds.top;
     
     const dx = mouseLocalX - startX;
     const dy = mouseLocalY - startY;
@@ -92,9 +76,9 @@ const InteractiveDuck = () => {
     const angleToMouse = Math.atan2(dy, dx);
     
     // Calculate arrow length based on distance to mouse
-    const maxLength = 80;
-    const minLength = 30;
-    const length = Math.max(minLength, Math.min(maxLength, distanceToMouse * 0.4));
+    const maxLength = 60;
+    const minLength = 25;
+    const length = Math.max(minLength, Math.min(maxLength, distanceToMouse * 0.3));
     
     // Arrow points toward mouse
     const endX = startX + Math.cos(angleToMouse) * length;
@@ -110,49 +94,49 @@ const InteractiveDuck = () => {
     >
       {/* SVG for arrows/dots */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
-        <g transform={`translate(${containerCenter.x - (containerRef.current?.getBoundingClientRect().left || 0)}, ${containerCenter.y - (containerRef.current?.getBoundingClientRect().top || 0)})`}>
-          {arrows.map((arrow, i) => (
-            <g key={i}>
-              {arrow.isDot ? (
-                <circle
-                  cx={arrow.startX}
-                  cy={arrow.startY}
-                  r="3"
-                  fill="black"
-                  className="transition-all duration-300"
+        {arrows.map((arrow, i) => (
+          <g key={i}>
+            {arrow.isDot ? (
+              <circle
+                cx={arrow.startX}
+                cy={arrow.startY}
+                r="4"
+                fill="black"
+                className="transition-all duration-300"
+              />
+            ) : (
+              <>
+                <line
+                  x1={arrow.startX}
+                  y1={arrow.startY}
+                  x2={arrow.endX}
+                  y2={arrow.endY}
+                  stroke="black"
+                  strokeWidth="2.5"
+                  className="transition-all duration-200"
                 />
-              ) : (
-                <>
-                  <line
-                    x1={arrow.startX}
-                    y1={arrow.startY}
-                    x2={arrow.endX}
-                    y2={arrow.endY}
-                    stroke="black"
-                    strokeWidth="3"
-                    className="transition-all duration-200"
-                  />
-                  {/* Arrowhead */}
-                  <polygon
-                    points={`${arrow.endX},${arrow.endY} ${arrow.endX - 10},${arrow.endY - 5} ${arrow.endX - 10},${arrow.endY + 5}`}
-                    fill="black"
-                    className="transition-all duration-200"
-                    transform={`rotate(${Math.atan2(arrow.endY - arrow.startY, arrow.endX - arrow.startX) * (180 / Math.PI)}, ${arrow.endX}, ${arrow.endY})`}
-                  />
-                </>
-              )}
-            </g>
-          ))}
-        </g>
+                {/* Arrowhead */}
+                <polygon
+                  points={`${arrow.endX},${arrow.endY} ${arrow.endX - 8},${arrow.endY - 4} ${arrow.endX - 8},${arrow.endY + 4}`}
+                  fill="black"
+                  className="transition-all duration-200"
+                  transform={`rotate(${Math.atan2(arrow.endY - arrow.startY, arrow.endX - arrow.startX) * (180 / Math.PI)}, ${arrow.endX}, ${arrow.endY})`}
+                />
+              </>
+            )}
+          </g>
+        ))}
       </svg>
 
-      {/* Orbiting Duck */}
+      {/* Fixed Duck in Center */}
       <div
-        className="absolute transition-all duration-300 ease-out"
+        className="absolute"
         style={{ 
-          width: "160px", 
-          height: "160px",
-          transform: `translate(${duckPosition.x}px, ${duckPosition.y}px)`,
+          width: "180px", 
+          height: "180px",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
         }}
       >
         <img 
