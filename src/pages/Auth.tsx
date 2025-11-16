@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,15 +51,25 @@ const Auth = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto space-y-6 animate-fade-in">
-      <div className="space-y-2 text-center">
-        <h2 className="text-3xl font-bold text-foreground">
-          {isLogin ? "Welcome Back" : "Create Account"}
-        </h2>
-        <p className="text-muted-foreground">
-          {isLogin ? "Sign in to sync your tasks" : "Sign up to get started"}
-        </p>
-      </div>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+      <div className="max-w-md w-full space-y-6 animate-fade-in">
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/')}
+          className="mb-4"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Home
+        </Button>
+        
+        <div className="space-y-2 text-center">
+          <h2 className="text-3xl font-bold text-foreground">
+            {isLogin ? "Welcome Back" : "Create Account"}
+          </h2>
+          <p className="text-muted-foreground">
+            {isLogin ? "Sign in to sync your tasks" : "Sign up to get started"}
+          </p>
+        </div>
 
       <div className="bg-card rounded-xl p-6 border shadow-lg">
         <form onSubmit={handleAuth} className="space-y-4">
@@ -103,6 +114,7 @@ const Auth = () => {
               : "Already have an account? Sign in"}
           </button>
         </div>
+      </div>
       </div>
     </div>
   );
