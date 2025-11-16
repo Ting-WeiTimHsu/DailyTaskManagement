@@ -50,15 +50,27 @@ const Landing = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="inline-flex flex-col gap-2"
             >
-              <h1 className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+              <motion.h1 
+                whileHover={{ scale: 1.05, filter: "drop-shadow(0 0 30px hsl(var(--primary)))" }}
+                transition={{ duration: 0.3 }}
+                className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight cursor-pointer"
+              >
                 Type
-              </h1>
-              <h1 className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary/60 via-primary/80 to-primary bg-clip-text text-transparent leading-tight">
+              </motion.h1>
+              <motion.h1 
+                whileHover={{ scale: 1.05, filter: "drop-shadow(0 0 30px hsl(var(--primary)))" }}
+                transition={{ duration: 0.3 }}
+                className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary/60 via-primary/80 to-primary bg-clip-text text-transparent leading-tight cursor-pointer"
+              >
                 Tap
-              </h1>
-              <h1 className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+              </motion.h1>
+              <motion.h1 
+                whileHover={{ scale: 1.05, filter: "drop-shadow(0 0 30px hsl(var(--primary)))" }}
+                transition={{ duration: 0.3 }}
+                className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight cursor-pointer"
+              >
                 Track
-              </h1>
+              </motion.h1>
             </motion.div>
           </div>
           
