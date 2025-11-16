@@ -97,7 +97,7 @@ const Landing = () => {
               }}
               className="text-lg px-8 py-6 rounded-full"
             >
-              Try It
+              Try it out
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </motion.div>
@@ -189,7 +189,7 @@ const Landing = () => {
       {/* Footer */}
       <footer className="border-t bg-card/50 backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-foreground">Daily Tasks Track</h3>
               <p className="text-sm text-muted-foreground">
@@ -197,42 +197,26 @@ const Landing = () => {
               </p>
             </div>
             
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-foreground">Product</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><button onClick={() => navigate('/auth')} className="hover:text-primary transition-colors">Features</button></li>
-                <li><button onClick={() => navigate('/auth')} className="hover:text-primary transition-colors">Pricing</button></li>
-                <li><button onClick={() => navigate('/auth')} className="hover:text-primary transition-colors">Try Demo</button></li>
-              </ul>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-foreground">Company</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
-              </ul>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-foreground">Connect</h4>
-              <div className="flex gap-4">
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Twitter className="h-5 w-5" />
+            <div className="space-y-4 md:text-right">
+              <p className="text-sm text-muted-foreground">
+                Developed by Tim Hsu by{' '}
+                <a 
+                  href="https://lovable.dev" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-foreground hover:text-primary transition-colors"
+                >
+                  Lovable
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    className="w-4 h-4 fill-current"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/>
+                  </svg>
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Github className="h-5 w-5" />
-                </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Mail className="h-5 w-5" />
-                </a>
-              </div>
+              </p>
             </div>
-          </div>
-          
-          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} Daily Tasks Track. All rights reserved.</p>
           </div>
         </div>
       </footer>
