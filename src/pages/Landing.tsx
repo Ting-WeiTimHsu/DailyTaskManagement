@@ -54,10 +54,10 @@ const Landing = () => {
                 Type
               </h1>
               <h1 className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary/60 via-primary/80 to-primary bg-clip-text text-transparent leading-tight">
-                Click
+                Tap
               </h1>
               <h1 className="text-7xl md:text-8xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
-                Manage
+                Track
               </h1>
             </motion.div>
           </div>
@@ -85,7 +85,7 @@ const Landing = () => {
               }}
               className="text-lg px-8 py-6 rounded-full"
             >
-              Try It Free
+              Try It
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </motion.div>
@@ -109,12 +109,9 @@ const Landing = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Try It Out
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+              Try It Out!
             </h2>
-            <p className="text-xl text-muted-foreground">
-              No sign-up required. Start managing your tasks right now.
-            </p>
           </motion.div>
           
           {showDemo && (
@@ -160,7 +157,7 @@ const Landing = () => {
               onClick={() => navigate('/auth')}
               className="text-lg px-12 py-6 rounded-full"
             >
-              Sign Up Now - It's Free
+              Sign Up Now
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             
