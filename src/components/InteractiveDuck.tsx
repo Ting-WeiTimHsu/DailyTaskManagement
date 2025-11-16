@@ -112,7 +112,7 @@ const InteractiveDuck = () => {
                   x2={arrow.endX}
                   y2={arrow.endY}
                   stroke="black"
-                  strokeWidth="2.5"
+                  strokeWidth="1.5"
                   className="transition-all duration-200"
                 />
                 {/* Arrowhead */}
@@ -128,7 +128,7 @@ const InteractiveDuck = () => {
         ))}
       </svg>
 
-      {/* Fixed Duck in Center */}
+      {/* Spinning Duck in Center */}
       <div
         className="absolute"
         style={{ 
@@ -137,8 +137,19 @@ const InteractiveDuck = () => {
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
+          animation: "spin 4s linear infinite",
         }}
       >
+        <style>{`
+          @keyframes spin {
+            from {
+              transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+              transform: translate(-50%, -50%) rotate(360deg);
+            }
+          }
+        `}</style>
         <img 
           src={duckImage} 
           alt="Interactive Duck" 
