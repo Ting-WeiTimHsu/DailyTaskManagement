@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import DateDropdown from "@/components/DateDropdown";
 import TaskItem from "@/components/TaskItem";
-import InteractiveDuck from "@/components/InteractiveDuck";
+import FlipClock from "@/components/FlipClock";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -232,7 +232,7 @@ const Index = () => {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
-      <InteractiveDuck />
+      <FlipClock />
 
       <DateDropdown value={selectedDate} onChange={setSelectedDate} />
 

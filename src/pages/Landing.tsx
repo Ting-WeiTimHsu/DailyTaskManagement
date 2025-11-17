@@ -105,7 +105,7 @@ const Landing = () => {
         </motion.div>
       </section>
 
-      {/* Clock Section */}
+      {/* Demo Section */}
       <motion.section 
         id="demo-section" 
         initial={{ opacity: 0 }}
@@ -113,25 +113,6 @@ const Landing = () => {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.8 }}
         className="flex items-center justify-center px-4 py-12"
-      >
-        <div className="max-w-4xl mx-auto w-full">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <FlipClock />
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Demo Section */}
-      <motion.section 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.8 }}
-        className="flex items-center justify-center px-4 py-12 mt-8"
       >
         <div className="max-w-4xl mx-auto w-full">
           <motion.div 
