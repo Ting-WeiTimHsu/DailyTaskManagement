@@ -1,73 +1,58 @@
-# Welcome to your Lovable project
+# Daily Tasks Track
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/bdde7972-f403-41fc-b7b3-489fdeacce1a
+A clean, minimal, and intuitive task-tracking web application designed to make your daily planning effortless.<br>
+Built with a modern UI, animated interactions, and real-time task management, Daily Tasks Track helps you stay organized through simple typing, tapping, and tracking.
 
-## How can I edit this code?
+## ✨ Overview
 
-There are several ways of editing your application.
+Daily Tasks Track is a beautifully crafted task manager focused on clarity and ease of use.<br>
+The app allows you to:<br>
+- Track daily tasks using a date-based stack system<br>
+- Add, edit, move, complete, and delete tasks<br>
+- Switch between days<br>
+- View past completed tasks<br>
+- Sync tasks with an account (Sign In / Sign Up)<br>
+- Enjoy a polished UI with gradients, soft shadows, and responsive design<br>
+- This project was prototyped and refined using Lovable, where iterative prompting and visual adjustments shaped its UI layout, component behavior, and feature flow.
 
 **Use Lovable**
 
 Simply visit the [Lovable Project](https://lovable.dev/projects/bdde7972-f403-41fc-b7b3-489fdeacce1a) and start prompting.
 
-Changes made via Lovable will be committed automatically to this repo.
+## 💡 Development Workflow (Using Lovable)
+This project was built using Lovable, an AI-assisted development environment.<br>
+The workflow included:<br>
+- Prompting Lovable to scaffold UI components<br>
+- Refining gradients, spacing, and layout through iterative prompts<br>
+- Implementing task logic and daily task state<br>
+- Adding menus, animations, and task movement<br>
+- Building login + signup flows<br>
+- Reviewing the visual design using Lovable previews<br>
+- Exporting the final Next.js app and customizing details<br>
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+Lovable accelerated the iteration process, enabling rapid prototyping and polished results.
 ```
 
-**Edit a file directly in GitHub**
+🚀 Getting Started
+git clone https://github.com/yourusername/daily-tasks-track.git
+cd daily-tasks-track
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+# Install dependencies
+npm install
 
-**Use GitHub Codespaces**
+# Start dev server
+npm run dev
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
-
-This project is built with:
+What technologies are used for this project?
+Lovable Built this project is built with:
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/bdde7972-f403-41fc-b7b3-489fdeacce1a) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```
+## 🏆🏫🛠️ The project is built in an event of Lovable x BDAA Hackathon at The Ohio State University and some times after the event for detailed tweaking.
