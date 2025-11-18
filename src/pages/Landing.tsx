@@ -210,7 +210,7 @@ const Landing = () => {
                   Lovable
                   <svg 
                     viewBox="0 0 24 24" 
-                    className="w-4 h-4"
+                    className="w-4 h-4 transition-transform duration-300 hover:scale-110 hover:rotate-12"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <defs>
@@ -233,7 +233,7 @@ const Landing = () => {
                   Vercel
                   <svg 
                     viewBox="0 0 24 24" 
-                    className="w-4 h-4"
+                    className="w-4 h-4 transition-transform duration-300 hover:scale-110 hover:-rotate-12"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
                   >
