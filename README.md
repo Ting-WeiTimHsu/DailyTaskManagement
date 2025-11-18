@@ -19,7 +19,9 @@ The app allows you to:<br>
 
 **Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/bdde7972-f403-41fc-b7b3-489fdeacce1a) and start prompting.
+Simply visit the [Lovable Project](https://lovable.dev/projects/bdde7972-f403-41fc-b7b3-489fdeacce1a) and start prompting.<br>
+Deployment: https://dailytask-managementsystem.vercel.app
+
 
 ## 💡 Development Workflow (Using Lovable)
 This project was built using Lovable, an AI-assisted development environment.<br>
