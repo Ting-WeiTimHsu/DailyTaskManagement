@@ -25,6 +25,9 @@ interface TaskItemProps {
   onDragStart?: (e: React.DragEvent, id: string) => void;
   onDragOver?: (e: React.DragEvent) => void;
   onDrop?: (e: React.DragEvent, targetId: string) => void;
+  onTouchStart?: (e: React.TouchEvent, id: string) => void;
+  onTouchMove?: (e: React.TouchEvent) => void;
+  onTouchEnd?: (e: React.TouchEvent) => void;
 }
 
 const TaskItem = ({
@@ -40,6 +43,9 @@ const TaskItem = ({
   onDragStart,
   onDragOver,
   onDrop,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd,
 }: TaskItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(text);
@@ -85,6 +91,7 @@ const TaskItem = ({
 
   return (
     <div
+      data-task-id={id}
       className={`group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all shadow-xl hover:shadow-2xl hover:bg-task-hover ${
         isDragging ? "opacity-50 scale-95" : "opacity-100 scale-100"
       } ${completed ? "opacity-60" : ""}`}
@@ -92,6 +99,9 @@ const TaskItem = ({
       onDragStart={(e) => onDragStart?.(e, id)}
       onDragOver={onDragOver}
       onDrop={(e) => onDrop?.(e, id)}
+      onTouchStart={(e) => onTouchStart?.(e, id)}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       <div className="flex-1 min-w-0">
         {isEditing ? (
