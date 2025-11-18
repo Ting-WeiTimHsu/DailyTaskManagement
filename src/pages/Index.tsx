@@ -209,6 +209,11 @@ const Index = () => {
     setTasks(updatedTasks);
     setDraggedTaskId(null);
 
+    // Haptic feedback
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+
     // Update positions in database
     for (const task of updatedTasks) {
       await supabase
@@ -286,6 +291,11 @@ const Index = () => {
           }));
 
           setTasks(updatedTasks);
+
+          // Haptic feedback
+          if (navigator.vibrate) {
+            navigator.vibrate(50);
+          }
 
           // Update positions in database
           for (const task of updatedTasks) {
@@ -375,6 +385,57 @@ const Index = () => {
           )}
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="mt-12 border-t bg-card/50 backdrop-blur rounded-xl p-6">
+        <div className="text-center space-y-2">
+          <p className="text-sm text-muted-foreground">
+            Daily Tasks Track - Simple and effective task management for your daily productivity.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Developed by Tim Hsu with{' '}
+            <a 
+              href="https://lovable.dev" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="story-link inline-flex items-center gap-1 text-foreground hover:text-primary transition-colors"
+            >
+              Lovable
+              <svg 
+                viewBox="0 0 24 24" 
+                className="w-3 h-3 transition-transform duration-300 hover:scale-110 hover:rotate-12"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <linearGradient id="lovable-gradient-footer" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#ec4899', stopOpacity: 1 }} />
+                    <stop offset="50%" style={{ stopColor: '#8b5cf6', stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: '#3b82f6', stopOpacity: 1 }} />
+                  </linearGradient>
+                </defs>
+                <path fill="url(#lovable-gradient-footer)" d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/>
+              </svg>
+            </a>
+            {', Deployed by '}
+            <a 
+              href="https://vercel.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="story-link inline-flex items-center gap-1 text-foreground hover:text-primary transition-colors"
+            >
+              Vercel
+              <svg 
+                viewBox="0 0 24 24" 
+                className="w-3 h-3 transition-transform duration-300 hover:scale-110 hover:-rotate-12"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+              >
+                <path d="M12 2L2 22h20L12 2z"/>
+              </svg>
+            </a>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
