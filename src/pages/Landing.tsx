@@ -188,7 +188,13 @@ const Landing = () => {
       </motion.section>
 
       {/* Footer */}
-      <footer className="border-t bg-card/50 backdrop-blur">
+      <motion.footer 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="border-t bg-card/50 backdrop-blur"
+      >
         <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
@@ -244,7 +250,7 @@ const Landing = () => {
             </div>
           </div>
         </div>
-      </footer>
+      </motion.footer>
     </div>
   );
 };

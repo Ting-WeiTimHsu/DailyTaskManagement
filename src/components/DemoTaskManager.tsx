@@ -19,6 +19,8 @@ const DemoTaskManager = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskText, setNewTaskText] = useState("");
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [touchedTaskId, setTouchedTaskId] = useState<string | null>(null);
 
   // Load tasks from localStorage
   useEffect(() => {
@@ -111,6 +113,84 @@ const DemoTaskManager = () => {
     setDraggedTaskId(null);
   };
 
+  const handleTouchStart = (e: React.TouchEvent, id: string) => {
+    setTouchedTaskId(id);
+    setTouchStartY(e.touches[0].clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchedTaskId || touchStartY === null) return;
+    
+    const currentY = e.touches[0].clientY;
+    const deltaY = Math.abs(currentY - touchStartY);
+    
+    // Only start drag if moved more than 10px vertically
+    if (deltaY > 10) {
+      setDraggedTaskId(touchedTaskId);
+    }
+    
+    // Find element at touch position
+    const element = document.elementFromPoint(
+      e.touches[0].clientX,
+      e.touches[0].clientY
+    );
+    
+    if (element) {
+      const taskElement = element.closest('[data-task-id]');
+      if (taskElement) {
+        const targetId = taskElement.getAttribute('data-task-id');
+        if (targetId && targetId !== touchedTaskId) {
+          // Visual feedback
+          taskElement.classList.add('bg-accent/50');
+        }
+      }
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchedTaskId || !draggedTaskId) {
+      setTouchedTaskId(null);
+      setTouchStartY(null);
+      setDraggedTaskId(null);
+      return;
+    }
+    
+    // Find element at touch position
+    const element = document.elementFromPoint(
+      e.changedTouches[0].clientX,
+      e.changedTouches[0].clientY
+    );
+    
+    if (element) {
+      const taskElement = element.closest('[data-task-id]');
+      if (taskElement) {
+        const targetId = taskElement.getAttribute('data-task-id');
+        if (targetId && targetId !== touchedTaskId) {
+          // Perform the drop
+          const draggedIndex = tasks.findIndex((t) => t.id === touchedTaskId);
+          const targetIndex = tasks.findIndex((t) => t.id === targetId);
+
+          const newTasks = [...tasks];
+          const [draggedTask] = newTasks.splice(draggedIndex, 1);
+          newTasks.splice(targetIndex, 0, draggedTask);
+
+          const updatedTasks = newTasks.map((task, index) => ({
+            ...task,
+            position: index,
+          }));
+
+          saveTasks(updatedTasks);
+        }
+        // Remove visual feedback
+        taskElement.classList.remove('bg-accent/50');
+      }
+    }
+    
+    setTouchedTaskId(null);
+    setTouchStartY(null);
+    setDraggedTaskId(null);
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleAddTask();
@@ -163,6 +243,9 @@ const DemoTaskManager = () => {
                 onDragStart={handleDragStart}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               />
             ))
           )}

@@ -25,6 +25,8 @@ const Index = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [touchedTaskId, setTouchedTaskId] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -216,6 +218,93 @@ const Index = () => {
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent, id: string) => {
+    setTouchedTaskId(id);
+    setTouchStartY(e.touches[0].clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchedTaskId || touchStartY === null) return;
+    
+    const currentY = e.touches[0].clientY;
+    const deltaY = Math.abs(currentY - touchStartY);
+    
+    // Only start drag if moved more than 10px vertically
+    if (deltaY > 10) {
+      setDraggedTaskId(touchedTaskId);
+    }
+    
+    // Find element at touch position
+    const element = document.elementFromPoint(
+      e.touches[0].clientX,
+      e.touches[0].clientY
+    );
+    
+    if (element) {
+      const taskElement = element.closest('[data-task-id]');
+      if (taskElement) {
+        const targetId = taskElement.getAttribute('data-task-id');
+        if (targetId && targetId !== touchedTaskId) {
+          // Visual feedback
+          taskElement.classList.add('bg-accent/50');
+        }
+      }
+    }
+  };
+
+  const handleTouchEnd = async (e: React.TouchEvent) => {
+    if (!touchedTaskId || !draggedTaskId) {
+      setTouchedTaskId(null);
+      setTouchStartY(null);
+      setDraggedTaskId(null);
+      return;
+    }
+    
+    // Find element at touch position
+    const element = document.elementFromPoint(
+      e.changedTouches[0].clientX,
+      e.changedTouches[0].clientY
+    );
+    
+    if (element) {
+      const taskElement = element.closest('[data-task-id]');
+      if (taskElement) {
+        const targetId = taskElement.getAttribute('data-task-id');
+        if (targetId && targetId !== touchedTaskId) {
+          // Perform the drop
+          const draggedIndex = tasks.findIndex((t) => t.id === touchedTaskId);
+          const targetIndex = tasks.findIndex((t) => t.id === targetId);
+
+          const newTasks = [...tasks];
+          const [draggedTask] = newTasks.splice(draggedIndex, 1);
+          newTasks.splice(targetIndex, 0, draggedTask);
+
+          // Update positions
+          const updatedTasks = newTasks.map((task, index) => ({
+            ...task,
+            position: index,
+          }));
+
+          setTasks(updatedTasks);
+
+          // Update positions in database
+          for (const task of updatedTasks) {
+            await supabase
+              .from("tasks")
+              .update({ position: task.position })
+              .eq("id", task.id);
+          }
+        }
+        // Remove visual feedback
+        taskElement.classList.remove('bg-accent/50');
+      }
+    }
+    
+    setTouchedTaskId(null);
+    setTouchStartY(null);
+    setDraggedTaskId(null);
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleAddTask();
@@ -278,6 +367,9 @@ const Index = () => {
                 onDragStart={handleDragStart}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               />
             ))
           )}
