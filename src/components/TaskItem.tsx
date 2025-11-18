@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { MoreVertical, Trash2, MoveRight } from "lucide-react";
+import { MoreVertical, Trash2, MoveRight, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -49,6 +49,8 @@ const TaskItem = ({
 }: TaskItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(text);
+  const [swipeX, setSwipeX] = useState(0);
+  const [swipeStartX, setSwipeStartX] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -89,20 +91,87 @@ const TaskItem = ({
     onMove(id, newDate);
   };
 
+  const handleSwipeStart = (clientX: number) => {
+    setSwipeStartX(clientX);
+  };
+
+  const handleSwipeMove = (clientX: number) => {
+    if (swipeStartX === null) return;
+    const deltaX = clientX - swipeStartX;
+    setSwipeX(deltaX);
+  };
+
+  const handleSwipeEnd = () => {
+    if (swipeStartX === null) return;
+    
+    // Swipe left to delete (threshold: -100px)
+    if (swipeX < -100) {
+      // Haptic feedback
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+      onDelete(id);
+    }
+    // Swipe right to complete (threshold: 100px)
+    else if (swipeX > 100) {
+      // Haptic feedback
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+      onToggleComplete(id);
+    }
+    
+    // Reset
+    setSwipeX(0);
+    setSwipeStartX(null);
+  };
+
   return (
     <div
       data-task-id={id}
-      className={`group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all shadow-xl hover:shadow-2xl hover:bg-task-hover ${
+      style={{
+        transform: `translateX(${swipeX}px)`,
+        transition: swipeStartX === null ? 'transform 0.3s ease' : 'none',
+      }}
+      className={`group flex items-center gap-3 rounded-xl border bg-card p-4 shadow-xl hover:shadow-2xl hover:bg-task-hover ${
         isDragging ? "opacity-50 scale-95" : "opacity-100 scale-100"
-      } ${completed ? "opacity-60" : ""}`}
+      } ${completed ? "opacity-60" : ""} ${
+        swipeX < -50 ? 'bg-destructive/20' : swipeX > 50 ? 'bg-primary/20' : ''
+      }`}
       draggable
       onDragStart={(e) => onDragStart?.(e, id)}
       onDragOver={onDragOver}
       onDrop={(e) => onDrop?.(e, id)}
-      onTouchStart={(e) => onTouchStart?.(e, id)}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
+      onTouchStart={(e) => {
+        onTouchStart?.(e, id);
+        handleSwipeStart(e.touches[0].clientX);
+      }}
+      onTouchMove={(e) => {
+        onTouchMove?.(e);
+        handleSwipeMove(e.touches[0].clientX);
+      }}
+      onTouchEnd={(e) => {
+        onTouchEnd?.(e);
+        handleSwipeEnd();
+      }}
+      onMouseDown={(e) => handleSwipeStart(e.clientX)}
+      onMouseMove={(e) => {
+        if (e.buttons === 1) {
+          handleSwipeMove(e.clientX);
+        }
+      }}
+      onMouseUp={handleSwipeEnd}
+      onMouseLeave={() => {
+        if (swipeStartX !== null) {
+          setSwipeX(0);
+          setSwipeStartX(null);
+        }
+      }}
     >
+      {/* Drag Handle */}
+      <div className="cursor-grab active:cursor-grabbing opacity-40 group-hover:opacity-100 transition-opacity">
+        <GripVertical className="h-5 w-5 text-muted-foreground" />
+      </div>
       <div className="flex-1 min-w-0">
         {isEditing ? (
           <input

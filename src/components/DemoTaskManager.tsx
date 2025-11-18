@@ -111,6 +111,11 @@ const DemoTaskManager = () => {
 
     saveTasks(updatedTasks);
     setDraggedTaskId(null);
+    
+    // Haptic feedback
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
   };
 
   const handleTouchStart = (e: React.TouchEvent, id: string) => {
@@ -180,6 +185,11 @@ const DemoTaskManager = () => {
           }));
 
           saveTasks(updatedTasks);
+          
+          // Haptic feedback
+          if (navigator.vibrate) {
+            navigator.vibrate(50);
+          }
         }
         // Remove visual feedback
         taskElement.classList.remove('bg-accent/50');
