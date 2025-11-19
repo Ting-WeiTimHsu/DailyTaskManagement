@@ -15,13 +15,20 @@ const Landing = () => {
   // Smoother parallax effects with reduced intensity
   const heroY = useTransform(scrollY, [0, 800], [0, 100]);
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+  
+  // Navbar scroll animation
+  const navbarY = useTransform(scrollY, [0, 100], [-100, 0]);
+  const navbarOpacity = useTransform(scrollY, [0, 100], [0, 1]);
 
   return (
     <div className="min-h-screen bg-background relative">
       <BackgroundParticles />
       
       {/* Navbar */}
-      <header className="fixed top-0 z-50 w-full pt-4">
+      <motion.header 
+        style={{ y: navbarY, opacity: navbarOpacity }}
+        className="fixed top-0 z-50 w-full pt-4"
+      >
         <div className="mx-auto w-[80%]">
           <div className="flex h-16 items-center justify-between px-6 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 border rounded-full shadow-lg">
             <h1 className="text-xl font-semibold text-foreground">
@@ -35,7 +42,7 @@ const Landing = () => {
             </Button>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex flex-col items-center justify-center pb-16 px-4 pt-24 overflow-hidden">
