@@ -12,9 +12,9 @@ const Landing = () => {
   const [showDemo, setShowDemo] = useState(false);
   const { scrollY } = useScroll();
   
-  // Parallax effects
-  const heroY = useTransform(scrollY, [0, 500], [0, 150]);
-  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  // Smoother parallax effects with reduced intensity
+  const heroY = useTransform(scrollY, [0, 800], [0, 100]);
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -28,9 +28,8 @@ const Landing = () => {
               Daily Tasks Track
             </h1>
             <Button
-              variant="ghost"
               onClick={() => navigate('/auth')}
-              className="rounded-full"
+              className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90 hover:shadow-lg hover:scale-105 transition-all duration-300"
             >
               Login
             </Button>
